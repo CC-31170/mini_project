@@ -140,7 +140,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="gsrc.cpp" />
-    <ClCompile Include="OpenGL Ex 1 step 3.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="objects.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="objects.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
