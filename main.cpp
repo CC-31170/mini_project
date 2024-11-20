@@ -35,44 +35,19 @@ double theta, phi, psi;
 
 GLUquadricObj* pObj1, * pObj2, * pObj3; //quadric objects to store properties of the quadric mesh
 
-void draw_arm_1(void)
-{
-	glTranslatef(0.0, 30.0, 0.0);
-	glPushMatrix();					
-	glColor3f(0.0, 1.0, 0.0);
-	glScalef(21, 25.0, 21);
-	cube();
-	glPopMatrix();
-	glPushMatrix();
-	glColor3f(0.0, 1.0, 0.0);
-	glTranslatef(10.0, 32.0, 0.0);
-	glRotatef(60.0, 0.0, 0.0, 1.0);
-	glScalef(21, 45.0, 21);
-	cube();
-	glPopMatrix();
-
-}
-
-
-
 void displayobject(void)
 {
-
-	//
-	//////////////////////////////////////////////////////////////////
-	  /*  Enable Z buffer method for visibility determination. */
-	  //  Z buffer code starts
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(1.0, 1.0, 1.0, 0.0);	// Set display-window color to white.
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	draw_base();
-	glRotatef(theta, 0.0, 1.0, 0.0);
+	glRotatef(theta, 0.0, 1.0, 0.0); // first joint rotation
 	
 	draw_arm_1();
-
 	
+	dram_arm_2(theta);
 
 }
 
@@ -85,14 +60,13 @@ void drawscene(void)
 	gluPerspective(45, double(viewport[2]) / viewport[3], 0.1, 1000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0, 0, 400, 0, 0, 0, 0, 1, 0);
+	gluLookAt(0, 0, 600, 0, 0, 0, 0, 1, 0);
 	glMultMatrixf(gsrc_getmo());  // get the rotation matrix from the rotation user-interface
 
 	displayobject();
 
 	glutSwapBuffers();
 }
-
 
 void animate(void)
 {
@@ -119,9 +93,6 @@ void main (int argc, char** argv)
 	glutCreateWindow("mini project");					  // Create display window.
 	t_prev = glutGet(GLUT_ELAPSED_TIME);
 	theta = 0; phi = 0; psi = 0;
-	pObj1 = gluNewQuadric();
-	pObj2 = gluNewQuadric();
-	pObj3 = gluNewQuadric();
 	//////////////////////////////////////////////////////////////////
 	// 
 	// Register mouse-click and mouse-move glut callback functions
