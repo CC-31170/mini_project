@@ -30,19 +30,14 @@
 #define WIN_WIDTH  400
 #define WIN_HEIGHT 300
 
-typedef struct point{ // define a structure for 3D point (x, y, z)
-	GLfloat x;
-	GLfloat y;
-	GLfloat z;
-} vertex;
+double t_prev;                   // previous time elapsed
+double theta, phi, psi;
 
-vertex mesh [GRIDSIZE][GRIDSIZE];           // define a mesh whose elements are 3D point (x, y, z)
-vertex table[GRIDSIZE];
-double theta, phi, psi;			      // rotation angles of robot, lower-and-upper arm, upper arm respectivley
 GLUquadricObj* pObj1, * pObj2, * pObj3; //quadric objects to store properties of the quadric mesh
 
 void draw_arm_1(void)
 {
+	glTranslatef(0.0, 30.0, 0.0);
 	glPushMatrix();					
 	glColor3f(0.0, 1.0, 0.0);
 	glScalef(21, 25.0, 21);
@@ -59,28 +54,29 @@ void draw_arm_1(void)
 }
 
 
-void calculateplane (void)
-// calculate the parameters of the plane mesh
+
+void displayobject(void)
 {
-  for (int i=0;i<GRIDSIZE;i++)
-    for (int j=0;j<GRIDSIZE;j++) 
-    {
-      mesh[i][j].x = 2*float(i)/(GRIDSIZE-1)-1;
-      mesh[i][j].y = 2*float(j)/(GRIDSIZE-1)-1;
-      mesh[i][j].z = 0;
-    }
+
+	//
+	//////////////////////////////////////////////////////////////////
+	  /*  Enable Z buffer method for visibility determination. */
+	  //  Z buffer code starts
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(1.0, 1.0, 1.0, 0.0);	// Set display-window color to white.
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	draw_base();
+	glRotatef(theta, 0.0, 1.0, 0.0);
+	
+	draw_arm_1();
+
+	
+
 }
-void calculatebase(void)
-{
-	for (int i = 0; i < GRIDSIZE; i++)
-		for (int j = 0; j < GRIDSIZE; j++)
-		{
-			mesh[i][j].x = 2 * float(i) / (GRIDSIZE - 1) - 1;
-			mesh[i][j].y = 2 * float(j) / (GRIDSIZE - 1) - 1;
-			mesh[i][j].z = 1;
-		}
-}
-void displayobject (void)
+
+void drawscene(void)
 {
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport); // viewport is by default the display window
@@ -91,23 +87,23 @@ void displayobject (void)
 	glLoadIdentity();
 	gluLookAt(0, 0, 400, 0, 0, 0, 0, 1, 0);
 	glMultMatrixf(gsrc_getmo());  // get the rotation matrix from the rotation user-interface
-  //
-  //////////////////////////////////////////////////////////////////
-	/*  Enable Z buffer method for visibility determination. */
-	//  Z buffer code starts
-    glClear (GL_DEPTH_BUFFER_BIT);
-    glEnable (GL_DEPTH_TEST);
-	glClearColor(1.0, 1.0, 1.0, 0.0);	// Set display-window color to white.
-	glClear(GL_COLOR_BUFFER_BIT);
 
-	draw_base();
+	displayobject();
 
-	glTranslatef(0.0, 30.0, 0.0);
-
-	draw_arm_1();
-	
 	glutSwapBuffers();
+}
 
+
+void animate(void)
+{
+	double	t, rt, cosang;
+	double swing_angle = 90.0;                  
+	double swing_time = 1000.0;
+
+	t = glutGet(GLUT_ELAPSED_TIME) - t_prev;
+
+	theta = swing_angle * pow(sin(PI * t / (2 * swing_time)), 2);
+	glutPostRedisplay();
 }
 
 void main (int argc, char** argv)
@@ -121,7 +117,7 @@ void main (int argc, char** argv)
 	glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);		  // Set display-window width and height.
 
 	glutCreateWindow("mini project");					  // Create display window.
-
+	t_prev = glutGet(GLUT_ELAPSED_TIME);
 	theta = 0; phi = 0; psi = 0;
 	pObj1 = gluNewQuadric();
 	pObj2 = gluNewQuadric();
@@ -131,10 +127,11 @@ void main (int argc, char** argv)
 	// Register mouse-click and mouse-move glut callback functions
 	// for the rotation user-interface.
 	// 
+	glutIdleFunc(animate);
 	glutMouseFunc(gsrc_mousebutton);
 	glutMotionFunc(gsrc_mousemove);
 	//
 	//////////////////////////////////////////////////////////////////
-	glutDisplayFunc(displayobject);   // put everything you wish to draw in drawscene
+	glutDisplayFunc(drawscene);   // put everything you wish to draw in drawscene
 	glutMainLoop();
 }
