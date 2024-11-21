@@ -33,45 +33,56 @@ void draw_base(void){
 
 }
 void draw_arm_1(void){
+	glPushMatrix();
 	GLUquadricObj* pObj1;
 	pObj1 = gluNewQuadric();
 	glTranslatef(0.0, 30.0, 0.0);
-	glPushMatrix();
 	glColor3f(0.66, 0.66, 0.66);//grey
 	glScalef(21, 25.0, 21);
 	cube();
 	glPopMatrix();
 	glPushMatrix();
 	glColor3f(0.66, 0.66, 0.66);
-	glTranslatef(10.0, 32.0, 0.0);
+	glTranslatef(10.0, 62.0, 0.0);
 	glRotatef(60.0, 0.0, 0.0, 1.0);
 	glScalef(21, 65.0, 21);
 	cube();
 	glPopMatrix();
 	glPushMatrix();
 	glColor3f(1.0, 0.0, 0.0);
-	glTranslatef(-100, 95.5, -30);
+	glTranslatef(-100, 125.5, -30);
 	gluCylinder(pObj1, 21, 21, 60, 20, 20);
 	gluDisk(pObj1, 0, 21, 21, 20);
 	glTranslatef(0, 0, 60);
 	gluDisk(pObj1, 0, 21, 21, 20);
-	glPushMatrix();
+	
+	
 }
 void dram_arm_2(double angle) {
-	glRotatef(angle, 0.0, 0.0, 1.0);
-	glColor3f(0.66, 0.66, 0.66);
-	glTranslatef(-90, -20, -30);
-	glScalef(60, 20.0, 30);
-	cube();
+	// animation
 	glPushMatrix();
-	glRotatef(angle, 0.0, 0.0, 1.0);
-	glTranslatef(-15, -20, 10.0);
-	glScalef(40, 20.0, 10);
-	cube();
-	glRotatef(angle, 0.0, 0.0, 1.0);
-	glTranslatef(-15, -20, -70.0);
-	glScalef(40, 20.0, 10);
-	cube();
+		GLUquadricObj* pObj2;
+		pObj2 = gluNewQuadric();
+		glRotatef(angle, 0.0, 0.0, 1.0); // first joint rotation
+		glTranslatef(-100, -20, -30);
+		glColor3f(0.66, 0.66, 0.66);
+		glScalef(60, 20.0, 30);
+		cube();
+		glPushMatrix();
+			/*glColor3f(0, 1, 0);*/
+			glTranslatef(1, 0, 1.3); 
+			glScalef(1, 1, 0.3);
+			cube();
+			glTranslatef(1, 0, -1.3);
+			glScalef(1, 1, 0.3);
+			cube();
+		glPopMatrix();
 	glPopMatrix();
 
+	
+
+	
+
+
+	
 }

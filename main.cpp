@@ -48,6 +48,7 @@ void displayobject(void)
 	draw_arm_1();
 	
 	dram_arm_2(theta);
+	
 
 }
 
