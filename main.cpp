@@ -43,11 +43,13 @@ void displayobject(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	draw_base();
-	glRotatef(theta, 0.0, 1.0, 0.0); // first joint rotation
+	//glRotatef(theta, 0.0, 1.0, 0.0); // first joint rotation
 	
 	draw_arm_1();
 	
 	dram_arm_2(theta);
+
+	glPopMatrix();
 	
 
 }
@@ -94,6 +96,7 @@ void main (int argc, char** argv)
 	glutCreateWindow("mini project");					  // Create display window.
 	t_prev = glutGet(GLUT_ELAPSED_TIME);
 	theta = 0; phi = 0; psi = 0;
+	pObj2 = gluNewQuadric();
 	//////////////////////////////////////////////////////////////////
 	// 
 	// Register mouse-click and mouse-move glut callback functions
