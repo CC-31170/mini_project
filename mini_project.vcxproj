@@ -145,6 +145,7 @@
     <ClCompile Include="objects.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="glew.h" />
     <ClInclude Include="my_mathlib.h" />
     <ClInclude Include="objects.h" />
   </ItemGroup>

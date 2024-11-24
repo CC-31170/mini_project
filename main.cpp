@@ -12,8 +12,10 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
+#include "glew.h"
 #include "freeglut.h"
 #include "objects.h"
+
 //////////////////////////////////////////////////////////////////
 // 
 // Include the header file of our rotation user-interface.
@@ -34,13 +36,38 @@ double t_prev;                   // previous time elapsed
 double theta, phi, psi;
 
 GLUquadricObj* pObj1, * pObj2, * pObj3; //quadric objects to store properties of the quadric mesh
+void drawCheckeredFloor(void)
+{
+	/*glShadeModel(GL_FLAT); */// Flat shading to get the checkered pattern.
+	int i = 0;
 
+	glPushMatrix();
+
+	for (float z = 200.0; z > -200.0; z -= 20.0)
+	{
+		glBegin(GL_TRIANGLE_STRIP);
+		for (float x = -200.0; x < 200.0; x += 20.0)
+		{
+			if (i % 2) glColor3f(0.0, 0.5, 0.5);
+			else glColor3f(1.0, 1.0, 1.0);
+			glNormal3f(0.0, 1.0, 0.0);
+			glVertex3f(x, 0.0, z - 5.0);
+			glVertex3f(x, 0.0, z);
+			i++;
+		}
+		glEnd();
+		i++;
+	}
+
+	glPopMatrix();
+}
 void displayobject(void)
 {
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glClearColor(1.0, 1.0, 1.0, 0.0);	// Set display-window color to white.
-	glClear(GL_COLOR_BUFFER_BIT);
+	//glClear(GL_DEPTH_BUFFER_BIT);
+	//glEnable(GL_DEPTH_TEST);
+	/*glClearColor(1.0, 1.0, 1.0, 0.0);	*/// Set display-window color to white.
+	
+	/*glClear(GL_COLOR_BUFFER_BIT);*/
 
 	draw_base();
 	glRotatef(theta, 0.0, 1.0, 0.0); // first joint rotation
@@ -58,15 +85,20 @@ void displayobject(void)
 void drawscene(void)
 {
 	GLint viewport[4];
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // 清除颜色和深度缓冲区
+	glClearColor(1.0, 1.0, 1.0, 0.0);	// Set display-window color to white.
 	glGetIntegerv(GL_VIEWPORT, viewport); // viewport is by default the display window
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+
 	gluPerspective(45, double(viewport[2]) / viewport[3], 0.1, 1000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(0, 0, 600, 0, 0, 0, 0, 1, 0);
 	glMultMatrixf(gsrc_getmo());  // get the rotation matrix from the rotation user-interface
-
+	glEnable(GL_DEPTH_TEST); // 启用深度测试
+	drawCheckeredFloor();
 	displayobject();
 
 	glutSwapBuffers();
