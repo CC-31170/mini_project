@@ -57,7 +57,7 @@ void draw_arm_1(void){
 	gluDisk(pObj1, 0, 21, 21, 20);
 }
 
-void dram_arm_2(double angle) {
+void draw_arm_2(double angle) {
 	// animation
 		GLUquadricObj* pObj2;
 		pObj2 = gluNewQuadric();
@@ -84,9 +84,34 @@ void dram_arm_2(double angle) {
 			glColor3f(1.0, 0.0, 0.0);
 			glRotatef(-90.0, 0.0, 1.0, 0.0);
 			glTranslatef(-30, 0, 120);
-			gluCylinder(pObj2, 16, 16, 40, 20, 20);// the second joint
+			gluCylinder(pObj2, 16, 16, 40, 20, 20);// the third joint
 			glTranslatef(0, 0, 40);//r=16 h=40
 			gluDisk(pObj2, 0, 16,16, 20);
-		glPopMatrix();
-		glPushMatrix();// next object
+		
+}
+void draw_arm_3(double angle) {
+	glRotatef(angle, 0.0, 0.0, 1.0); // third arm
+	glPushMatrix();
+	glTranslatef(0.0, -20.0, 30.0);
+	glColor3f(0.66, 0.66, 0.66);//grey
+	glScalef(20, 20, 30);
+	cube();
+	glPopMatrix();
+	glPushMatrix();
+	glColor3f(1, 0, 0);// slide rail
+	glTranslatef(0.0, -10.0, 60.0);
+	glScalef(40, 10, 10);
+	cube();
+	glPopMatrix();
+	glPushMatrix();
+	glColor3f(0.66, 0.66, 0.66);//gripper1
+	glTranslatef(-25.0, -10.0, 85.0);
+	glScalef(10, 10, 15);
+	cube();
+	glPopMatrix();
+	glColor3f(0.66, 0.66, 0.66);//gripper2
+	glTranslatef(25.0, -10.0, 85.0);
+	glScalef(10, 10, 15);
+	cube();
+
 }

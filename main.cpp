@@ -43,15 +43,16 @@ void displayobject(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	draw_base();
-	//glRotatef(theta, 0.0, 1.0, 0.0); // first joint rotation
+	glRotatef(theta, 0.0, 1.0, 0.0); // first joint rotation
 	
 	draw_arm_1();
 	
-	dram_arm_2(theta);
+	draw_arm_2(theta);
+
+	draw_arm_3(theta);
+
 
 	glPopMatrix();
-	
-
 }
 
 void drawscene(void)
