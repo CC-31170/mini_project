@@ -1,6 +1,6 @@
 #include "freeglut.h"
 #include "object.h"
-void cube(){
+void cube(void){
 // draw a standard 2 x 2 x 2 cube whose center is at (0, 1, 0)
 	/* The use of glPushMatrix and glPopMatrix here protects the glRotatef from
 	   exercising its influence on the relative transformation beyond this function */
@@ -15,7 +15,12 @@ void cube(){
 void wheel(GLUquadricObj* pObj0) {
 	glColor3f(1, 0, 0);//red chassis wheel
 	gluCylinder(pObj0, 30, 30, 30, 20, 20);  //r=30 h=30
-	/*gluDisk(pObj0, 0, 30, 20, 20);*/
+	gluDisk(pObj0, 0, 30, 20, 20);
+}
+void draw_box(void) {
+	glTranslatef(-500, 100, 500);
+	glColor3f(0.2, 0.185, 0.136);//red chassis wheel
+	cube();
 }
 void draw_base(void){
 // draw base : robotic arm base with circle joint

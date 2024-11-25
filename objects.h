@@ -2,8 +2,9 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
 
-void cube();
+void cube(void);
 void wheel(GLUquadricObj* pObj0);
+void draw_box(void);
 void draw_base(void);
 void draw_arm_1(void);
 void draw_arm_2(void);

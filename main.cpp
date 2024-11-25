@@ -48,7 +48,7 @@ void drawCheckeredFloor(void)
 		glBegin(GL_TRIANGLE_STRIP);
 		for (float x = -1000.0; x < 1000.0; x += 100.0)
 		{
-			if (i % 2) glColor3f(0.0, 0.5, 0.5);
+			if (i % 2) glColor3f(0.2, 0.185, 0.136);
 			else glColor3f(0.5, 1.0, 1.0);
 			glNormal3f(0.0, 1.0, 0.0);
 			glVertex3f(x, 0.0, z - 100.0);
@@ -66,7 +66,12 @@ void displayobject(void)
 	//glClear(GL_DEPTH_BUFFER_BIT);
 	//glEnable(GL_DEPTH_TEST);
 	/*glClearColor(1.0, 1.0, 1.0, 0.0);	*/// Set display-window color to white.
-	
+	glPushMatrix();
+	glTranslatef(-600.0, 1.0, 600.0);
+	glColor3f(0.22, 0.165, 0.02);//gripper1
+	glScalef(100, 100, 100);
+	cube();
+	glPopMatrix();
 	/*glClear(GL_COLOR_BUFFER_BIT);*/
 	glPushMatrix();
 	draw_chassis();
