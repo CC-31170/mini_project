@@ -72,7 +72,8 @@ void displayobject(void)
 	draw_chassis();
 	glPopMatrix();
 	draw_lifting_platform();
-	/*draw_robotic_arm();*/
+
+	draw_robotic_arm();
 }
 
 void drawscene(void)

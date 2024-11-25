@@ -23,35 +23,40 @@ void draw_base(void){
 	pObj0 = gluNewQuadric();
 	//glPushMatrix();
 	glPopMatrix();
+	glTranslatef(0, 0, -120);
+	glPushMatrix();
 	glColor3f(0.38, 0.38, 0.38); //dark grey
 	glScalef(55, 7.5, 35);
 	cube();
-	//glPopMatrix();
-	glPushMatrix();
+	
+	glPopMatrix();
 	glColor3f(1.0, 0.0, 0.0);
+	glPushMatrix();
 	glRotatef(-90.0, 1.0, 0.0, 0.0);
 	gluCylinder(pObj0, 30, 30, 30, 20, 20);  //r=30 h=30
 	glTranslatef(0, 0, 30);
-	gluDisk(pObj0, 0, 30, 20, 20);
-	glPopMatrix();
+	gluDisk(pObj0, 0, 30, 30, 20);
+	
+	
 }
 void draw_arm_1(void){
-	glPushMatrix();
+	glPopMatrix();
 	GLUquadricObj* pObj1;
 	pObj1 = gluNewQuadric();
 	glTranslatef(0.0, 30.0, 0.0);
+	glPushMatrix();
 	glColor3f(0.66, 0.66, 0.66);//grey
 	glScalef(21, 25.0, 21);
 	cube();
 	glPopMatrix();
-	glPushMatrix();
+	//glPushMatrix();
 	glColor3f(0.66, 0.66, 0.66);
-	glTranslatef(10.0, 62.0, 0.0);
+	glTranslatef(10.0, 32.0, 0.0);
 	glRotatef(60.0, 0.0, 0.0, 1.0);
 	glScalef(21, 65.0, 21);
 	cube();
-	glPopMatrix();
-	glPushMatrix();
+	//glPopMatrix();
+	/*glPushMatrix();*/
 	glColor3f(1.0, 0.0, 0.0);
 	glTranslatef(-100, 125.5, -30);
 	gluCylinder(pObj1, 21, 21, 60, 20, 20);
@@ -120,7 +125,7 @@ void draw_arm_3() {
 void draw_robotic_arm() {
 	draw_base();
 	//glRotatef(theta, 0.0, 1.0, 0.0); // first joint rotation
-	//draw_arm_1();
+	draw_arm_1();
 	//draw_arm_2();
 	//draw_arm_3();
 	//glPopMatrix();
@@ -179,6 +184,7 @@ void draw_lifting_platform() {
 	glColor3f(1, 0, 0);
 	glTranslatef(-20.0, 400, 0.0);
 	glPushMatrix();
+	glPushMatrix();// robot arm start
 	glScalef(150, 100, 150);
 	glutSolidCube(1);
 	glPopMatrix();
@@ -189,4 +195,7 @@ void draw_lifting_platform() {
 	glColor3f(0.66, 0.66, 0.66);
 	glTranslatef(0.0, 0, 100.0);
 	gluSphere(pObj0, 60, 20, 20);
+	glColor3f(0, 1, 0);
+	glRotatef(-90.0, 0.0, 1.0, 0.0);
+	gluCylinder(pObj0, 30, 20, 80, 20, 20);
 }
