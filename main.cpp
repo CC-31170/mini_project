@@ -43,13 +43,13 @@ void drawCheckeredFloor(void)
 
 	glPushMatrix();
 
-	for (float z = 200.0; z > -200.0; z -= 20.0)
+	for (float z = 300.0; z > -300.0; z -= 20.0)
 	{
 		glBegin(GL_TRIANGLE_STRIP);
-		for (float x = -200.0; x < 200.0; x += 20.0)
+		for (float x = -300.0; x < 300.0; x += 20.0)
 		{
 			if (i % 2) glColor3f(0.0, 0.5, 0.5);
-			else glColor3f(1.0, 1.0, 1.0);
+			else glColor3f(0.5, 1.0, 1.0);
 			glNormal3f(0.0, 1.0, 0.0);
 			glVertex3f(x, 0.0, z - 5.0);
 			glVertex3f(x, 0.0, z);
@@ -68,18 +68,11 @@ void displayobject(void)
 	/*glClearColor(1.0, 1.0, 1.0, 0.0);	*/// Set display-window color to white.
 	
 	/*glClear(GL_COLOR_BUFFER_BIT);*/
-
-	draw_base();
-	glRotatef(theta, 0.0, 1.0, 0.0); // first joint rotation
-	
-	draw_arm_1();
-	
-	draw_arm_2(theta);
-
-	draw_arm_3(theta);
-
-
+	glPushMatrix();
+	draw_chassis();
 	glPopMatrix();
+	draw_lifting_platform();
+	/*draw_robotic_arm();*/
 }
 
 void drawscene(void)
@@ -92,10 +85,10 @@ void drawscene(void)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	gluPerspective(45, double(viewport[2]) / viewport[3], 0.1, 1000);
+	gluPerspective(90, double(viewport[2]) / viewport[3], 0.1, 1500);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0, 0, 600, 0, 0, 0, 0, 1, 0);
+	gluLookAt(0, 0, 1000, 0, 0, 0, 0, 1, 0);
 	glMultMatrixf(gsrc_getmo());  // get the rotation matrix from the rotation user-interface
 	glEnable(GL_DEPTH_TEST); // ÆôÓÃÉî¶È²âÊÔ
 	drawCheckeredFloor();
