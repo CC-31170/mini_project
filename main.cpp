@@ -26,12 +26,13 @@
 
 //animation parameters
 double t_prev;                  
-double theta, phi, alpha,beta,gama;
+double theta, phi, alpha,beta_R,beta_R_last,beta_L,gama_R,gama_L,omega;
 bool isRunning = true;
 int animationState = 0;
+int count = 0;
 //shadow on plane parameter
 float Xs = 300, Ys = 1800, Zs = 300;
-GLfloat light1PosType[] = { Xs, Ys, Zs, 1.0 };
+//GLfloat light1PosType[] = { Xs, Ys, Zs, 1.0 };
 float shadowColour[] = { 0.1, 0.1, 0.1 };
 GLfloat M[16];
 //quadrilateral texture mapping
@@ -39,13 +40,13 @@ void drawCheckeredFloor(void)
 {
 	int i = 0;
 	glPushMatrix();
-	for (float z = 1000.0; z > -1000.0; z -= 100.0)
+	for (float z = 1500.0; z > -1500.0; z -= 100.0)
 	{
 		glBegin(GL_TRIANGLE_STRIP);
-		for (float x = -1000.0; x < 1000.0; x += 100.0)
+		for (float x = -1500.0; x < 1500.0; x += 100.0)
 		{
-			if (i % 2) glColor3f(0.2, 0.185, 0.136);
-			else glColor3f(0.5, 1.0, 1.0);
+			if ((i / 15) % 2 == 0 && (i % 15) % 2 == 0) glColor3f(0.9, 0.6, 0.4); 
+			else glColor3f(0.6, 0.3, 0.1); 
 			glNormal3f(0.0, 1.0, 0.0);
 			glVertex3f(x, 0.0, z - 100.0);
 			glVertex3f(x, 0.0, z);
@@ -56,10 +57,11 @@ void drawCheckeredFloor(void)
 	}
 	glPopMatrix();
 }
-// draw no color objects
+// draw no color objects (shadow)
 void displayobject(void)
 {
 	glPushMatrix();
+	glTranslatef(-omega, 0, 0.0);
 	glRotatef(theta, 0.0, 1.0, 0.0);
 		glPushMatrix();
 		draw_chassis_nc();
@@ -71,11 +73,11 @@ void displayobject(void)
 		glPushMatrix();
 		glRotatef(-90.0, 1.0, 0.0, 0.0);
 		glTranslatef(0, 75, 0);
-		draw_robotic_arm_nc(alpha);
+		draw_robotic_arm_nc_R(alpha, beta_R, gama_R);
 		glPopMatrix();
 		glRotatef(90.0, 1.0, 0.0, 0.0);
 		glTranslatef(0, 75, 0);
-		draw_robotic_arm_nc(alpha);
+		draw_robotic_arm_nc_L(alpha, beta_L, gama_L);
 		glPopMatrix();
 	glPopMatrix();
 	glPushMatrix();
@@ -91,6 +93,7 @@ void displayobject2(void)
 {
 
 	glPushMatrix();
+	glTranslatef(-omega, 0, 0.0);
 	glRotatef(theta, 0.0, 1.0, 0.0);//case 0
 		glPushMatrix();
 		draw_chassis();
@@ -102,11 +105,11 @@ void displayobject2(void)
 		glPushMatrix();
 		glRotatef(-90.0, 1.0, 0.0, 0.0);
 		glTranslatef(0, 75, 0);
-		draw_robotic_arm(alpha);
+		draw_robotic_arm_R(alpha,beta_R,gama_R);
 		glPopMatrix();
 		glRotatef(90.0, 1.0, 0.0, 0.0);
 		glTranslatef(0, 75, 0);
-		draw_robotic_arm(alpha);
+		draw_robotic_arm_L(alpha,beta_L,gama_L);
 		glPopMatrix();
 	glPopMatrix();
 	glPushMatrix();
@@ -139,7 +142,7 @@ void drawscene(void)
 
 	for (int i = 0; i < 16; i++)
 		M[i] = 0;
-	M[0] = M[5] = M[10] = 1;
+	M[0] = M[5] = M[10] = 1;//shadow perspective matrix
 	M[7] = -1.0 / Ys;
 
 	displayobject2();
@@ -154,12 +157,13 @@ void drawscene(void)
 
 void animate(void)
 {
-	
 		double	t, rt, cosang;
 		double rotate_angle = 90.0;
-		double lift_length = 100.0;
-		double joint_1 = 90,joint_lf_1 = 90, joint_rg_2 = 90;
+		double lift_length = 100.0, movement_x=600;
+		double joint_1 = 90,joint_lf_3 = 90, joint_rg_3 = 90;
+		double joint_2 = 40;
 		double swing_time = 1000.0;
+		double waving_time = 1000;
 		
 		t = glutGet(GLUT_ELAPSED_TIME) - t_prev;
 		switch (animationState)
@@ -191,6 +195,44 @@ void animate(void)
 				t_prev = glutGet(GLUT_ELAPSED_TIME);
 			}
 			break;
+		case 3://turn wrist
+			gama_R = joint_lf_3 * pow(sin(PI * t / (2 * swing_time)), 2);
+			gama_L = 0;
+			if (gama_R>=joint_lf_3 - 1)
+			{
+				gama_R = joint_lf_3;
+				animationState = 4;
+				t_prev = glutGet(GLUT_ELAPSED_TIME);
+			}
+			break;
+		case 4://waving arm
+			beta_R = joint_2 *sin(PI * t / (waving_time));
+			beta_L = 0;
+			if (t>=4*waving_time)
+			{
+				animationState = 5;
+				t_prev = glutGet(GLUT_ELAPSED_TIME);
+			}
+			break;
+		case 5://reset
+			gama_R = -joint_lf_3 * pow(cos(PI * t / (2 * swing_time)), 2);
+			alpha = joint_1 * pow(cos(PI * t / (2 * swing_time)), 2);
+			if (gama_R >=- 1)
+			{
+				gama_R = 0;
+				animationState = 6;
+				t_prev = glutGet(GLUT_ELAPSED_TIME);
+			}
+			break;
+		case 6:
+			omega = movement_x * pow(sin(PI * t / (3 * swing_time)), 2);
+			if (phi >= movement_x - 1)
+			{
+				phi = movement_x;
+				animationState = 7;
+				t_prev = glutGet(GLUT_ELAPSED_TIME);
+			}
+			break;
 		default:
 			
 			break;
@@ -208,7 +250,7 @@ void main (int argc, char** argv)
 	glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);		  // Set display-window width and height.
 	glutCreateWindow("mini project");					  // Create display window.
 	t_prev = glutGet(GLUT_ELAPSED_TIME);
-	theta = 0; phi = 0; alpha = 0,beta=0,gama=0;
+	theta = 0; phi = 0; alpha = 0,beta_R=0,beta_L=0,gama_R=0,gama_L=0,omega=0;
 	glutIdleFunc(animate);
 	glutMouseFunc(gsrc_mousebutton);
 	glutMotionFunc(gsrc_mousemove);

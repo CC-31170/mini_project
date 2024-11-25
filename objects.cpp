@@ -56,11 +56,11 @@ void draw_arm_1(double joint1){
 	gluDisk(pObj1, 0, 21, 21, 20);
 }
 
-void draw_arm_2() {
+void draw_arm_2(double joint2) {
 	// animation
 		GLUquadricObj* pObj2;
 		pObj2 = gluNewQuadric();
-		//glRotatef(angle, 0.0, 0.0, 1.0); // first joint rotation
+		glRotatef(joint2, 0.0, 0.0, 1.0); // first joint rotation
 		glPushMatrix();
 			glPushMatrix();
 				glPushMatrix();
@@ -87,8 +87,8 @@ void draw_arm_2() {
 			glTranslatef(0, 0, 40);//r=16 h=40
 			gluDisk(pObj2, 0, 16,16, 20);
 }
-void draw_arm_3() {
-	//glRotatef(angle, 0.0, 0.0, 1.0); // third arm
+void draw_arm_3(double joint3) {
+	glRotatef(joint3, 0.0, 0.0, 1.0); // third arm
 	glPushMatrix();
 	glTranslatef(0.0, -20.0, 30.0);
 	glColor3f(0.66, 0.66, 0.66);//grey
@@ -113,11 +113,20 @@ void draw_arm_3() {
 	cube();
 }
 
-void draw_robotic_arm(double joint1) {
+void draw_robotic_arm_R(double joint1,double joint2,double joint3) {
+	//Right arm
 	draw_base();
 	draw_arm_1(joint1);
-	draw_arm_2();
-	draw_arm_3();
+	draw_arm_2(joint2);
+	draw_arm_3(joint3);
+	//glPopMatrix();
+}
+void draw_robotic_arm_L(double joint1,double joint2 ,double joint3) {
+	//Left arm
+	draw_base();
+	draw_arm_1(joint1);
+	draw_arm_2(joint2);
+	draw_arm_3(joint3);
 	//glPopMatrix();
 }
 
