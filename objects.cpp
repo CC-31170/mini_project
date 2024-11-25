@@ -1,26 +1,15 @@
 #include "freeglut.h"
 
 void cube(void){
-// draw a standard 2 x 2 x 2 cube whose center is at (0, 1, 0)
-	/* The use of glPushMatrix and glPopMatrix here protects the glRotatef from
-	   exercising its influence on the relative transformation beyond this function */
 	glPushMatrix();
-
 	glTranslatef(0, 1, 0);
 	glutSolidCube(2);
-
 	glPopMatrix();
-
 }
 void wheel(GLUquadricObj* pObj0) {
 	glColor3f(1, 0, 0);//red chassis wheel
 	gluCylinder(pObj0, 30, 30, 30, 20, 20);  //r=30 h=30
 	gluDisk(pObj0, 0, 30, 20, 20);
-}
-void draw_box(void) {
-	glTranslatef(-500, 100, 500);
-	glColor3f(0.2, 0.185, 0.136);//red chassis wheel
-	cube();
 }
 void draw_base(void){
 // draw base : robotic arm base with circle joint
@@ -39,10 +28,11 @@ void draw_base(void){
 	glTranslatef(0, 0, 30);
 	gluDisk(pObj0, 0, 30, 30, 20);
 }
-void draw_arm_1(void){
+void draw_arm_1(double joint1){
 	glPopMatrix();
 	GLUquadricObj* pObj1;
 	pObj1 = gluNewQuadric();
+	glRotatef(joint1, 0.0, 1.0, 0.0); // first joint rotation
 	glTranslatef(0.0, 30.0, 0.0);
 	glPushMatrix();
 	glColor3f(0.66, 0.66, 0.66);//grey
@@ -123,10 +113,9 @@ void draw_arm_3() {
 	cube();
 }
 
-void draw_robotic_arm() {
+void draw_robotic_arm(double joint1) {
 	draw_base();
-	//glRotatef(theta, 0.0, 1.0, 0.0); // first joint rotation
-	draw_arm_1();
+	draw_arm_1(joint1);
 	draw_arm_2();
 	draw_arm_3();
 	//glPopMatrix();
@@ -182,7 +171,7 @@ void draw_lifting_platform() {
 	GLUquadricObj* pObj0;
 	pObj0 = gluNewQuadric();
 	glColor3f(1, 0, 0);
-	glTranslatef(-20.0, 600, 0.0);
+	//glTranslatef(-20.0, 600, 0.0);
 	glPushMatrix();
 	glPushMatrix();// robot arm start
 	glScalef(150, 100, 150);
