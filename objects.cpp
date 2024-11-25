@@ -188,7 +188,7 @@ void draw_lifting_platform() {
 	GLUquadricObj* pObj0;
 	pObj0 = gluNewQuadric();
 	glColor3f(1, 0, 0);
-	glTranslatef(-20.0, 400, 0.0);
+	glTranslatef(-20.0, 600, 0.0);
 	glPushMatrix();
 	glPushMatrix();// robot arm start
 	glScalef(150, 100, 150);

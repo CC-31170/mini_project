@@ -1,5 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//
+ï»¿////////////////////////////////////////////////////////////////////////////////////////////////////
 // Specification:
 //   An animation is a robot with chassis and vertical Lifting mechanism 
 //   and two robotic arms with 
@@ -15,15 +14,8 @@
 #include "glew.h"
 #include "freeglut.h"
 #include "objects.h"
-
-//////////////////////////////////////////////////////////////////
-// 
-// Include the header file of our rotation user-interface.
-// 
 #include "gsrc.h"
 #include "object.h"
-// 
-//////////////////////////////////////////////////////////////////
 
 #define PI 3.141592654
 #define GRIDSIZE 4
@@ -32,17 +24,20 @@
 #define WIN_WIDTH  400
 #define WIN_HEIGHT 300
 
+
 double t_prev;                   // previous time elapsed
 double theta, phi, psi;
 
 GLUquadricObj* pObj1, * pObj2, * pObj3; //quadric objects to store properties of the quadric mesh
+//shadow on plane parameter
+float Xs = 300, Ys = 1800, Zs = 300;
+GLfloat light1PosType[] = { Xs, Ys, Zs, 1.0 };
+float shadowColour[] = { 0.1, 0.1, 0.1 };
+GLfloat M[16];
 void drawCheckeredFloor(void)
 {
-	/*glShadeModel(GL_FLAT); */// Flat shading to get the checkered pattern.
 	int i = 0;
-
 	glPushMatrix();
-
 	for (float z = 1000.0; z > -1000.0; z -= 100.0)
 	{
 		glBegin(GL_TRIANGLE_STRIP);
@@ -58,7 +53,6 @@ void drawCheckeredFloor(void)
 		glEnd();
 		i++;
 	}
-
 	glPopMatrix();
 }
 void displayobject(void)
@@ -66,13 +60,48 @@ void displayobject(void)
 	//glClear(GL_DEPTH_BUFFER_BIT);
 	//glEnable(GL_DEPTH_TEST);
 	/*glClearColor(1.0, 1.0, 1.0, 0.0);	*/// Set display-window color to white.
+	
+	/*show robot body part*/
+	
 	glPushMatrix();
-	glTranslatef(-600.0, 1.0, 600.0);
-	glColor3f(0.22, 0.165, 0.02);//gripper1
+	glRotatef(theta, 0.0, 1.0, 0.0);
+		glPushMatrix();
+		
+		draw_chassis();
+		glPopMatrix();
+		draw_lifting_platform();
+		glPopMatrix();
+		glPushMatrix();
+		glRotatef(-90.0, 1.0, 0.0, 0.0);
+		glTranslatef(0, 75, 0);
+		
+		draw_robotic_arm();
+		glPopMatrix();
+		glRotatef(90.0, 1.0, 0.0, 0.0);
+		glTranslatef(0, 75, 0);
+		draw_robotic_arm();
+		glPopMatrix();
+	glPopMatrix();
+
+	glPushMatrix();
+	
+	glTranslatef(-430.0, 0.0, 430.0);
+	
+	glColor3f(0, 0, 0);//gripper1
 	glScalef(100, 100, 100);
 	cube();
 	glPopMatrix();
-	/*glClear(GL_COLOR_BUFFER_BIT);*/
+}
+void displayobject2(void)
+{
+	//glClear(GL_DEPTH_BUFFER_BIT);
+	//glEnable(GL_DEPTH_TEST);
+	/*glClearColor(1.0, 1.0, 1.0, 0.0);	*/// Set display-window color to white.
+
+	/*show robot body part*/
+
+	glPushMatrix();
+	glRotatef(theta, 0.0, 1.0, 0.0);
 	glPushMatrix();
 	draw_chassis();
 	glPopMatrix();
@@ -86,27 +115,57 @@ void displayobject(void)
 	glRotatef(90.0, 1.0, 0.0, 0.0);
 	glTranslatef(0, 75, 0);
 	draw_robotic_arm();
-}
+	glPopMatrix();
+	glPopMatrix();
 
+	glPushMatrix();
+	glTranslatef(-330.0, 0.0, 330.0);
+
+	glColor3f(0.4, 0.265, 0.02);//gripper1
+	glScalef(100, 100, 100);
+	cube();
+	glPopMatrix();
+}
 void drawscene(void)
 {
 	GLint viewport[4];
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Çå³ýÑÕÉ«ºÍÉî¶È»º³åÇø
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // æ¸…é™¤é¢œè‰²å’Œæ·±åº¦ç¼“å†²åŒº
 	glClearColor(1.0, 1.0, 1.0, 0.0);	// Set display-window color to white.
 	glGetIntegerv(GL_VIEWPORT, viewport); // viewport is by default the display window
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
-	gluPerspective(95, double(viewport[2]) / viewport[3], 0.1, 1800);
+	gluPerspective(100, double(viewport[2]) / viewport[3], 0.1, 2200);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0, 0, 1200, 0, 0, 0, 0, 1, 0);
-	glMultMatrixf(gsrc_getmo());  // get the rotation matrix from the rotation user-interface
-	glEnable(GL_DEPTH_TEST); // ÆôÓÃÉî¶È²âÊÔ
-	drawCheckeredFloor();
-	displayobject();
+	gluLookAt(0, 800, 1200, 0, 0, 0, 0, 1, 0);
+	glMultMatrixf(gsrc_getmo());
 
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glPushMatrix();
+	glTranslatef(0.0, -2, 0.0);
+	drawCheckeredFloor();
+	glPopMatrix();
+
+	for (int i = 0; i < 16; i++)
+		M[i] = 0;
+	M[0] = M[5] = M[10] = 1;
+	M[7] = -1.0 / Ys;
+
+	displayobject2();
+
+	//glPushMatrix(); // save state
+
+	glTranslatef(Xs, Ys, Zs); // Mwc
+	glMultMatrixf(M); // perspective project
+	glTranslatef(-Xs, -Ys, -Zs); // Ms
+	glColor3fv(shadowColour); // 
+
+	displayobject();
+	
+	glPopMatrix(); // restore state
+
+	
 	glutSwapBuffers();
 }
 
