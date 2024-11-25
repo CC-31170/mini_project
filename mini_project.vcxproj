@@ -142,11 +142,13 @@
     <ClCompile Include="gsrc.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="my_mathlib.cpp" />
+    <ClCompile Include="nocolor_objects.cpp" />
     <ClCompile Include="objects.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glew.h" />
     <ClInclude Include="my_mathlib.h" />
+    <ClInclude Include="nocolor_objects.h" />
     <ClInclude Include="objects.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -16,24 +16,23 @@
 #include "objects.h"
 #include "gsrc.h"
 #include "object.h"
+#include "nocolor_objects.h"
 
 #define PI 3.141592654
-#define GRIDSIZE 4
 #define WIN_POSX   50
 #define WIN_POSY   100
 #define WIN_WIDTH  400
 #define WIN_HEIGHT 300
 
-
-double t_prev;                   // previous time elapsed
+double t_prev;                  
 double theta, phi, psi;
 
-GLUquadricObj* pObj1, * pObj2, * pObj3; //quadric objects to store properties of the quadric mesh
 //shadow on plane parameter
 float Xs = 300, Ys = 1800, Zs = 300;
 GLfloat light1PosType[] = { Xs, Ys, Zs, 1.0 };
 float shadowColour[] = { 0.1, 0.1, 0.1 };
 GLfloat M[16];
+//quadrilateral texture mapping
 void drawCheckeredFloor(void)
 {
 	int i = 0;
@@ -55,18 +54,39 @@ void drawCheckeredFloor(void)
 	}
 	glPopMatrix();
 }
+// draw no color objects
 void displayobject(void)
 {
-	//glClear(GL_DEPTH_BUFFER_BIT);
-	//glEnable(GL_DEPTH_TEST);
-	/*glClearColor(1.0, 1.0, 1.0, 0.0);	*/// Set display-window color to white.
-	
-	/*show robot body part*/
-	
 	glPushMatrix();
 	glRotatef(theta, 0.0, 1.0, 0.0);
 		glPushMatrix();
-		
+		draw_chassis_nc();
+		glPopMatrix();
+		draw_lifting_platform_nc();
+		glPopMatrix();
+		glPushMatrix();
+		glRotatef(-90.0, 1.0, 0.0, 0.0);
+		glTranslatef(0, 75, 0);
+		draw_robotic_arm_nc();
+		glPopMatrix();
+		glRotatef(90.0, 1.0, 0.0, 0.0);
+		glTranslatef(0, 75, 0);
+		draw_robotic_arm_nc();
+		glPopMatrix();
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(-430.0, 0.0, 430.0);
+	glColor3f(0, 0, 0);//gripper1
+	glScalef(100, 100, 100);
+	cube();
+	glPopMatrix();
+}
+// draw colorful objects
+void displayobject2(void)
+{
+	glPushMatrix();
+	glRotatef(theta, 0.0, 1.0, 0.0);
+		glPushMatrix();
 		draw_chassis();
 		glPopMatrix();
 		draw_lifting_platform();
@@ -74,7 +94,6 @@ void displayobject(void)
 		glPushMatrix();
 		glRotatef(-90.0, 1.0, 0.0, 0.0);
 		glTranslatef(0, 75, 0);
-		
 		draw_robotic_arm();
 		glPopMatrix();
 		glRotatef(90.0, 1.0, 0.0, 0.0);
@@ -82,45 +101,8 @@ void displayobject(void)
 		draw_robotic_arm();
 		glPopMatrix();
 	glPopMatrix();
-
-	glPushMatrix();
-	
-	glTranslatef(-430.0, 0.0, 430.0);
-	
-	glColor3f(0, 0, 0);//gripper1
-	glScalef(100, 100, 100);
-	cube();
-	glPopMatrix();
-}
-void displayobject2(void)
-{
-	//glClear(GL_DEPTH_BUFFER_BIT);
-	//glEnable(GL_DEPTH_TEST);
-	/*glClearColor(1.0, 1.0, 1.0, 0.0);	*/// Set display-window color to white.
-
-	/*show robot body part*/
-
-	glPushMatrix();
-	glRotatef(theta, 0.0, 1.0, 0.0);
-	glPushMatrix();
-	draw_chassis();
-	glPopMatrix();
-	draw_lifting_platform();
-	glPopMatrix();
-	glPushMatrix();
-	glRotatef(-90.0, 1.0, 0.0, 0.0);
-	glTranslatef(0, 75, 0);
-	draw_robotic_arm();
-	glPopMatrix();
-	glRotatef(90.0, 1.0, 0.0, 0.0);
-	glTranslatef(0, 75, 0);
-	draw_robotic_arm();
-	glPopMatrix();
-	glPopMatrix();
-
 	glPushMatrix();
 	glTranslatef(-330.0, 0.0, 330.0);
-
 	glColor3f(0.4, 0.265, 0.02);//gripper1
 	glScalef(100, 100, 100);
 	cube();
@@ -194,7 +176,7 @@ void main (int argc, char** argv)
 	glutCreateWindow("mini project");					  // Create display window.
 	t_prev = glutGet(GLUT_ELAPSED_TIME);
 	theta = 0; phi = 0; psi = 0;
-	pObj2 = gluNewQuadric();
+
 	//////////////////////////////////////////////////////////////////
 	// 
 	// Register mouse-click and mouse-move glut callback functions

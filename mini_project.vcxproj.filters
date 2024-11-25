@@ -27,6 +27,9 @@
     <ClCompile Include="my_mathlib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="nocolor_objects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="objects.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="glew.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nocolor_objects.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
