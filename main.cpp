@@ -36,7 +36,7 @@ float Xs = 300, Ys = 1800, Zs = 300;
 float shadowColour[] = { 0.1, 0.1, 0.1 };
 GLfloat M[16];
 //quadrilateral texture mapping
-void drawCheckeredFloor(void)
+void drawFloor(void)
 {
 	int i = 0;
 	glPushMatrix();
@@ -45,7 +45,7 @@ void drawCheckeredFloor(void)
 		glBegin(GL_TRIANGLE_STRIP);
 		for (float x = -1500.0; x < 1500.0; x += 100.0)
 		{
-			if ((i / 15) % 2 == 0 && (i % 15) % 2 == 0) glColor3f(0.9, 0.6, 0.4); 
+			if ((i ) % 2 == 0 ) glColor3f(0.9, 0.6, 0.4); 
 			else glColor3f(0.6, 0.3, 0.1); 
 			glNormal3f(0.0, 1.0, 0.0);
 			glVertex3f(x, 0.0, z - 100.0);
@@ -137,7 +137,7 @@ void drawscene(void)
 	glEnable(GL_DEPTH_TEST);
 	glPushMatrix();
 	glTranslatef(0.0, -2, 0.0);
-	drawCheckeredFloor();
+	drawFloor();
 	glPopMatrix();
 
 	for (int i = 0; i < 16; i++)
@@ -226,7 +226,7 @@ void animate(void)
 			break;
 		case 6:
 			omega = movement_x * pow(sin(PI * t / (3 * swing_time)), 2);
-			if (phi >= movement_x - 1)
+			if (phi >= movement_x )
 			{
 				phi = movement_x;
 				animationState = 7;
@@ -243,12 +243,11 @@ void animate(void)
 
 void main (int argc, char** argv)
 {
-	glutInit(&argc, argv);			                      // Initialize GLUT
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // Set display mode
-	glutInitWindowPosition(WIN_POSX, WIN_POSY);         // Set display-window position at (WIN_POSX, WIN_POSY) 
-														  // where (0, 0) is top left corner of monitor screen
-	glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);		  // Set display-window width and height.
-	glutCreateWindow("mini project");					  // Create display window.
+	glutInit(&argc, argv);			                     
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); 
+	glutInitWindowPosition(WIN_POSX, WIN_POSY);         
+	glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);		  
+	glutCreateWindow("mini project");					 
 	t_prev = glutGet(GLUT_ELAPSED_TIME);
 	theta = 0; phi = 0; alpha = 0,beta_R=0,beta_L=0,gama_R=0,gama_L=0,omega=0;
 	glutIdleFunc(animate);
